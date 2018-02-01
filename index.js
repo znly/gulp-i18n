@@ -1,22 +1,22 @@
 'use strict';
 
 
-const Through = require('through2');
-const MessageFormat = require('messageformat');
-const Gutil = require('gulp-util');
-const Yaml = require('js-yaml');
-const Marked = require('marked');
+var Through = require('through2');
+var MessageFormat = require('messageformat');
+var Gutil = require('gulp-util');
+var Yaml = require('js-yaml');
+var Marked = require('marked');
 
 
 module.exports = function (options) {
 
-  const locales = {};
+  var locales = {};
 
-  const parse = function (file, encoding, next) {
+  var parse = function (file, encoding, next) {
 
-    const relativeParts = file.relative.split('/');
-    const ext = relativeParts[relativeParts.length - 1].split('.').pop();
-    const message = {
+    var relativeParts = file.relative.split('/');
+    var ext = relativeParts[relativeParts.length - 1].split('.').pop();
+    var message = {
       locale: relativeParts.shift(),
       namespace: relativeParts.join('/').replace(/\.[^.]*$/, '').replace(/\\/g, '/'),
       data: null
@@ -50,13 +50,13 @@ module.exports = function (options) {
     next();
   };
 
-  const flush = function (cb) {
+  var flush = function (cb) {
 
     Object.keys(locales).forEach((locale) => {
 
-      const mf = new MessageFormat(locale);
-      const data = locales[locale];
-      const compiled = 'window.i18n = (function () { ' + mf.compile(data) + ' })();';
+      var mf = new MessageFormat(locale);
+      var data = locales[locale];
+      var compiled = 'window.i18n = (function () { ' + mf.compile(data) + ' })();';
 
       this.push(new Gutil.File({
         path: locale + '.js',
